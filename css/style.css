@@ -8,16 +8,16 @@
 
 :root {
     /* Color Palette */
-    --primary-color: #d4af37;
-    --primary-dark: #b8941f;
-    --secondary-color: #2c1810;
-    --accent-color: #e8c4a0;
-    --bg-dark: #1a1410;
-    --bg-light: #f9f6f2;
-    --text-dark: #2c1810;
-    --text-light: #f9f6f2;
-    --glass-bg: rgba(255, 255, 255, 0.1);
-    --glass-border: rgba(255, 255, 255, 0.2);
+    --primary-color: #d4af62;
+    --primary-dark: #ad8540;
+    --secondary-color: #563541;
+    --accent-color: #d989a0;
+    --bg-dark: #442b36;
+    --bg-light: #fffaf5;
+    --text-dark: #49333d;
+    --text-light: #fffaf5;
+    --glass-bg: rgba(255, 250, 245, 0.1);
+    --glass-border: rgba(255, 250, 245, 0.22);
 
     /* Typography */
     --font-heading: 'Playfair Display', serif;
@@ -76,7 +76,7 @@ button {
     left: 0;
     right: 0;
     z-index: 1000;
-    background: rgba(26, 20, 16, 0.95);
+    background: rgba(68, 43, 54, 0.96);
     backdrop-filter: blur(10px);
     padding: var(--spacing-sm) 0;
     padding-top: max(var(--spacing-sm), env(safe-area-inset-top));
@@ -98,6 +98,19 @@ button {
     font-size: 1.8rem;
     font-weight: 700;
     letter-spacing: 1px;
+}
+
+.nav-brand a {
+    display: flex;
+    align-items: center;
+}
+
+.nav-brand img {
+    display: block;
+    width: 132px;
+    height: 124px;
+    object-fit: cover;
+    object-position: center;
 }
 
 .nav-menu {
@@ -154,7 +167,7 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #2c1810 0%, #1a1410 100%);
+    background: linear-gradient(135deg, #7d4a5a 0%, #442b36 100%);
     background-image: url('../assets/images/hero_bg.jpg');
     background-size: cover;
     background-position: center;
@@ -176,7 +189,7 @@ button {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, rgba(26, 20, 16, 0.85) 0%, rgba(44, 24, 16, 0.75) 100%);
+    background: linear-gradient(135deg, rgba(68, 43, 54, 0.78) 0%, rgba(86, 53, 65, 0.62) 100%);
 }
 
 .hero-content {
@@ -360,7 +373,7 @@ button {
 /* ===== MEET YOUR HAIRSTYLIST SECTION ===== */
 .meet-stylist {
     padding: var(--spacing-xl) 0;
-    background: linear-gradient(135deg, #f9f6f2 0%, #f5f0e8 100%);
+    background: linear-gradient(135deg, #fffaf5 0%, #f8e9eb 100%);
     position: relative;
     overflow: hidden;
 }
@@ -524,7 +537,7 @@ button {
 /* ===== PRICING SECTION ===== */
 .pricing-section {
     padding: var(--spacing-xl) 0;
-    background: linear-gradient(135deg, #2c1810 0%, #1a1410 100%);
+    background: linear-gradient(135deg, #563541 0%, #442b36 100%);
     position: relative;
     overflow: hidden;
 }
@@ -695,7 +708,7 @@ button {
 /* ===== BOOKING CALENDAR SECTION ===== */
 .booking-calendar {
     padding: var(--spacing-xl) 0;
-    background: #e8e4df;
+    background: #f8e9eb;
 }
 
 .booking-calendar .section-header h2 {
@@ -796,22 +809,22 @@ button {
 }
 
 .calendar-day.current {
-    background: #000;
+    background: var(--secondary-color);
     color: white;
 }
 
 .calendar-day.current:hover {
-    background: #000;
+    background: var(--secondary-color);
     transform: scale(1.05);
 }
 
 .calendar-day.selected {
-    background: #999;
+    background: var(--accent-color);
     color: white;
 }
 
 .calendar-day.selected:hover {
-    background: #888;
+    background: #c67891;
 }
 
 .calendar-legend {
@@ -848,7 +861,7 @@ button {
 }
 
 .selected-dot {
-    background: #999;
+    background: var(--accent-color);
 }
 
 .booking-note {
@@ -873,7 +886,7 @@ button {
     padding: var(--spacing-xl) 0;
     background:
         url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter></defs><rect width="100" height="100" filter="url(%23noise)" opacity="0.03"/></svg>'),
-        linear-gradient(135deg, #f0ebe4 0%, #e8e2d8 50%, #ddd6ca 100%);
+        linear-gradient(135deg, #fffaf5 0%, #f8e9eb 50%, #f2dfe4 100%);
     position: relative;
     overflow: hidden;
 }
@@ -886,7 +899,7 @@ button {
     left: 5%;
     right: 5%;
     height: 2px;
-    background: linear-gradient(90deg, transparent 0%, #2c1810 10%, #2c1810 90%, transparent 100%);
+    background: linear-gradient(90deg, transparent 0%, #ad8540 10%, #ad8540 90%, transparent 100%);
 }
 
 /* Bottom decorative border line */
@@ -897,7 +910,7 @@ button {
     left: 5%;
     right: 5%;
     height: 2px;
-    background: linear-gradient(90deg, transparent 0%, #2c1810 10%, #2c1810 90%, transparent 100%);
+    background: linear-gradient(90deg, transparent 0%, #ad8540 10%, #ad8540 90%, transparent 100%);
 }
 
 .confirmation-wrapper {
@@ -960,7 +973,7 @@ button {
     flex: 1;
     max-width: 100px;
     height: 2px;
-    background: #2c1810;
+    background: #ad8540;
     position: relative;
 }
 
@@ -971,7 +984,7 @@ button {
     top: 50%;
     transform: translateY(-50%);
     font-size: 10px;
-    color: #2c1810;
+    color: var(--secondary-color);
 }
 
 .header-line:first-child::before {
@@ -993,7 +1006,7 @@ button {
 .confirmation-header h2 {
     font-family: var(--font-heading);
     font-size: clamp(0.9rem, 2.2vw, 1.45rem);
-    color: #2c1810;
+    color: var(--secondary-color);
     letter-spacing: 4px;
     font-weight: 700;
     white-space: nowrap;
@@ -1008,7 +1021,7 @@ button {
     font-family: var(--font-body);
     font-size: 2.5rem;
     font-style: italic;
-    color: #2c1810;
+    color: var(--secondary-color);
     margin-bottom: var(--spacing-md);
     line-height: 1.6;
 }
@@ -1039,7 +1052,7 @@ button {
 .icon-circle {
     width: 55px;
     height: 55px;
-    border: 2px solid #2c1810;
+    border: 2px solid var(--primary-dark);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -1068,12 +1081,12 @@ button {
 
 .email-icon {
     font-size: 1.4rem;
-    color: #2c1810;
+    color: var(--secondary-color);
 }
 
 .phone-icon {
     font-size: 1.2rem;
-    color: #2c1810;
+    color: var(--secondary-color);
 }
 
 /* Appointment Confirmation Responsive */
@@ -1347,10 +1360,9 @@ button {
     .nav-menu {
         position: fixed;
         left: -100%;
-        top: 60px;
-        /* Reduced from 70px */
+        top: calc(90px + max(var(--spacing-sm), env(safe-area-inset-top)) + var(--spacing-sm));
         flex-direction: column;
-        background: rgba(26, 20, 16, 0.98);
+        background: rgba(68, 43, 54, 0.98);
         width: 100%;
         text-align: center;
         transition: var(--transition-medium);
@@ -1359,6 +1371,11 @@ button {
 
     .nav-menu.active {
         left: 0;
+    }
+
+    .nav-brand img {
+        width: 96px;
+        height: 90px;
     }
 
     .hamburger {
