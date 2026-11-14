@@ -31,9 +31,9 @@
     --spacing-xl: 6rem;
 
     /* Transitions */
-    --transition-fast: 0.2s ease;
-    --transition-medium: 0.3s ease;
-    --transition-slow: 0.5s ease;
+    --transition-fast: 0.2s cubic-bezier(0.2, 0.7, 0.3, 1);
+    --transition-medium: 0.35s cubic-bezier(0.2, 0.7, 0.3, 1);
+    --transition-slow: 0.6s cubic-bezier(0.2, 0.7, 0.3, 1);
 }
 
 html {
@@ -45,6 +45,7 @@ html {
 body {
     font-family: var(--font-body);
     color: var(--text-dark);
+    background: var(--bg-light);
     line-height: 1.6;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
@@ -78,12 +79,18 @@ button {
     z-index: 1000;
     background: rgba(68, 43, 54, 0.96);
     backdrop-filter: blur(10px);
-    padding: var(--spacing-sm) 0;
-    padding-top: max(var(--spacing-sm), env(safe-area-inset-top));
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+    padding: 0.5rem 0;
+    padding-top: max(0.5rem, env(safe-area-inset-top));
+    border-bottom: 1px solid rgba(212, 175, 98, 0.24);
+    box-shadow: 0 8px 30px rgba(44, 24, 34, 0.18);
     transition: var(--transition-medium);
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
+}
+
+.navbar.is-scrolled {
+    background: rgba(68, 43, 54, 0.98);
+    box-shadow: 0 10px 32px rgba(44, 24, 34, 0.28);
 }
 
 .navbar .container {
@@ -107,10 +114,15 @@ button {
 
 .nav-brand img {
     display: block;
-    width: 132px;
-    height: 124px;
+    width: 112px;
+    height: 105px;
     object-fit: cover;
     object-position: center;
+    transition: transform var(--transition-medium);
+}
+
+.nav-brand a:hover img {
+    transform: scale(1.025);
 }
 
 .nav-menu {
@@ -125,6 +137,16 @@ button {
     font-weight: 500;
     position: relative;
     transition: var(--transition-fast);
+}
+
+.nav-link:focus-visible,
+.hamburger:focus-visible,
+.cta-button:focus-visible,
+.select-service-btn:focus-visible,
+.calendar-nav:focus-visible,
+.social-link:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 4px;
 }
 
 .nav-link::after {
@@ -151,6 +173,9 @@ button {
     flex-direction: column;
     cursor: pointer;
     gap: 5px;
+    padding: 0.6rem;
+    border: 0;
+    background: transparent;
 }
 
 .hamburger span {
@@ -158,6 +183,18 @@ button {
     height: 3px;
     background: var(--primary-color);
     transition: var(--transition-fast);
+}
+
+.hamburger.active span:first-child {
+    transform: translateY(8px) rotate(45deg);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:last-child {
+    transform: translateY(-8px) rotate(-45deg);
 }
 
 /* ===== HERO SECTION ===== */
@@ -189,7 +226,7 @@ button {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, rgba(68, 43, 54, 0.78) 0%, rgba(86, 53, 65, 0.62) 100%);
+    background: linear-gradient(135deg, rgba(68, 43, 54, 0.7) 0%, rgba(86, 53, 65, 0.54) 100%);
 }
 
 .hero-content {
@@ -197,23 +234,38 @@ button {
     z-index: 1;
     text-align: center;
     color: var(--text-light);
-    animation: fadeInUp 1s ease;
+    width: min(100% - 2rem, 1100px);
+}
+
+.hero-eyebrow {
+    color: #f3d9d4;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.32em;
+    margin-bottom: 1.25rem;
+    text-transform: uppercase;
+    animation: fadeInUp 700ms both;
 }
 
 .hero-title {
     font-family: var(--font-heading);
-    font-size: clamp(2.5rem, 6vw, 5rem);
-    font-weight: 700;
-    margin-bottom: var(--spacing-sm);
+    font-size: clamp(2.6rem, 5.2vw, 4.65rem);
+    font-weight: 600;
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+    margin-bottom: 1.1rem;
     color: var(--primary-color);
     text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+    text-wrap: balance;
+    animation: fadeInUp 800ms 100ms both;
 }
 
 .hero-subtitle {
-    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    font-size: clamp(1.05rem, 2vw, 1.4rem);
     margin-bottom: var(--spacing-lg);
     font-weight: 300;
-    letter-spacing: 2px;
+    letter-spacing: 0.12em;
+    animation: fadeInUp 800ms 200ms both;
 }
 
 .cta-button {
@@ -224,11 +276,12 @@ button {
     text-decoration: none;
     font-weight: 600;
     font-size: 1.1rem;
-    border-radius: 50px;
+    border-radius: 999px;
     transition: var(--transition-medium);
-    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+    box-shadow: 0 12px 32px rgba(212, 175, 98, 0.28);
     position: relative;
     overflow: hidden;
+    animation: fadeInUp 800ms 300ms both;
 }
 
 .cta-button::before {
@@ -248,7 +301,7 @@ button {
 
 .cta-button:hover {
     transform: translateY(-3px);
-    box-shadow: 0 15px 40px rgba(212, 175, 55, 0.5);
+    box-shadow: 0 18px 42px rgba(212, 175, 98, 0.42);
 }
 
 /* ===== SERVICES SECTION ===== */
@@ -267,11 +320,22 @@ button {
     font-size: clamp(2rem, 4vw, 3.5rem);
     color: var(--secondary-color);
     margin-bottom: var(--spacing-sm);
+    text-wrap: balance;
+}
+
+.section-header h2::after {
+    content: '';
+    display: block;
+    width: 3rem;
+    height: 2px;
+    margin: 1rem auto 0;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
 }
 
 .section-header p {
     font-size: 1.2rem;
-    color: #666;
+    color: #786a70;
     font-weight: 300;
 }
 
@@ -283,22 +347,26 @@ button {
 }
 
 .service-card {
-    background: white;
-    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-light);
+    border: 1px solid rgba(217, 137, 160, 0.22);
+    border-radius: 24px;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 12px 32px rgba(86, 53, 65, 0.08);
     transition: var(--transition-medium);
     cursor: pointer;
 }
 
 .service-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 50px rgba(212, 175, 55, 0.3);
+    transform: translateY(-7px);
+    box-shadow: 0 22px 48px rgba(86, 53, 65, 0.16);
+    border-color: rgba(217, 137, 160, 0.46);
 }
 
 .service-image {
     width: 100%;
-    height: 250px;
+    height: 260px;
     overflow: hidden;
     position: relative;
 }
@@ -308,11 +376,11 @@ button {
     height: 100%;
     object-fit: cover;
     object-position: center;
-    transition: var(--transition-slow);
+    transition: transform 700ms cubic-bezier(0.2, 0.7, 0.3, 1);
 }
 
 .service-card:hover .service-image img {
-    transform: scale(1.1);
+    transform: scale(1.055);
 }
 
 
@@ -336,6 +404,10 @@ button {
 
 .service-content {
     padding: var(--spacing-md);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .service-content h3 {
@@ -346,18 +418,19 @@ button {
 }
 
 .service-content p {
-    color: #666;
+    color: #786a70;
     line-height: 1.8;
+    margin-bottom: 1.2rem;
 }
 
 .select-service-btn {
     display: inline-block;
-    margin-top: 1rem;
+    margin-top: auto;
     padding: 0.5rem 1.5rem;
     border: 1px solid var(--primary-color);
     background: transparent;
     color: var(--secondary-color);
-    border-radius: 25px;
+    border-radius: 999px;
     cursor: pointer;
     transition: all 0.3s ease;
     font-family: var(--font-body);
@@ -385,7 +458,7 @@ button {
     position: absolute;
     width: 150px;
     height: 150px;
-    background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(212, 175, 98, 0.2) 0%, transparent 70%);
     pointer-events: none;
 }
 
@@ -414,9 +487,10 @@ button {
 
 .stylist-image-container {
     position: relative;
-    border-radius: 15px;
+    border: 8px solid rgba(255, 250, 245, 0.76);
+    border-radius: 28px;
     overflow: hidden;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 24px 60px rgba(86, 53, 65, 0.16);
     width: 100%;
     /* height: 100%; Removed to allow aspect-ratio to determine height */
     aspect-ratio: 1 / 1;
@@ -436,11 +510,11 @@ button {
 }
 
 .stylist-contact-box {
-    background: white;
+    background: rgba(255, 250, 245, 0.9);
     padding: var(--spacing-md);
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    border-left: 4px solid var(--primary-color);
+    border-radius: 18px;
+    box-shadow: 0 12px 30px rgba(86, 53, 65, 0.09);
+    border-left: 4px solid var(--accent-color);
 }
 
 .stylist-contact-box h4 {
@@ -495,8 +569,8 @@ button {
 .stylist-bio {
     font-size: 1.1rem;
     line-height: 1.9;
-    color: #555;
-    text-align: justify;
+    color: #6d5b63;
+    max-width: 42rem;
     font-style: italic;
 }
 
@@ -550,8 +624,8 @@ button {
     right: 0;
     bottom: 0;
     background:
-        radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(212, 175, 55, 0.08) 0%, transparent 50%);
+        radial-gradient(circle at 20% 30%, rgba(217, 137, 160, 0.16) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(212, 175, 98, 0.12) 0%, transparent 50%);
     pointer-events: none;
 }
 
@@ -578,10 +652,11 @@ button {
 }
 
 .pricing-card {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 20px;
+    background: var(--bg-light);
+    border: 1px solid rgba(217, 137, 160, 0.24);
+    border-radius: 24px;
     overflow: hidden;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 16px 38px rgba(35, 18, 27, 0.22);
     transition: var(--transition-medium);
     position: relative;
 }
@@ -598,11 +673,11 @@ button {
 
 .pricing-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 25px 60px rgba(212, 175, 55, 0.3);
+    box-shadow: 0 24px 52px rgba(35, 18, 27, 0.3);
 }
 
 .pricing-card-header {
-    background: linear-gradient(135deg, var(--secondary-color) 0%, #3d2519 100%);
+    background: linear-gradient(135deg, #714958 0%, var(--bg-dark) 100%);
     padding: var(--spacing-md);
     text-align: center;
 }
@@ -708,7 +783,7 @@ button {
 /* ===== BOOKING CALENDAR SECTION ===== */
 .booking-calendar {
     padding: var(--spacing-xl) 0;
-    background: #f8e9eb;
+    background: linear-gradient(135deg, #f8e9eb 0%, #fff5f1 100%);
 }
 
 .booking-calendar .section-header h2 {
@@ -722,10 +797,11 @@ button {
 .calendar-container {
     max-width: 600px;
     margin: 0 auto;
-    background: white;
-    border-radius: 20px;
+    background: var(--bg-light);
+    border: 1px solid rgba(217, 137, 160, 0.24);
+    border-radius: 24px;
     padding: var(--spacing-lg);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 20px 50px rgba(86, 53, 65, 0.1);
 }
 
 .calendar-header {
@@ -756,6 +832,12 @@ button {
 .calendar-nav:hover {
     background: rgba(212, 175, 55, 0.1);
     color: var(--primary-color);
+}
+
+.calendar-nav:active,
+.select-service-btn:active,
+.cta-button:active {
+    transform: scale(0.97);
 }
 
 .calendar-grid {
@@ -926,7 +1008,7 @@ button {
     width: 200px;
     height: 280px;
     overflow: hidden;
-    border-radius: 0;
+    border-radius: 20px;
     opacity: 1;
     transition: var(--transition-medium);
     flex-shrink: 0;
@@ -1019,19 +1101,19 @@ button {
 
 .confirmation-main {
     font-family: var(--font-body);
-    font-size: 2.5rem;
+    font-size: clamp(1.35rem, 2.4vw, 1.8rem);
     font-style: italic;
     color: var(--secondary-color);
     margin-bottom: var(--spacing-md);
-    line-height: 1.6;
+    line-height: 1.55;
 }
 
 .confirmation-reminder {
     font-family: var(--font-body);
-    font-size: 2.45rem;
+    font-size: 1rem;
     font-style: italic;
-    color: #444;
-    line-height: 1.9;
+    color: #6d5b63;
+    line-height: 1.8;
 
 }
 
@@ -1057,7 +1139,7 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.9);
+    background: var(--bg-light);
     transition: var(--transition-medium);
 }
 
@@ -1242,13 +1324,13 @@ button {
     background: var(--glass-bg);
     backdrop-filter: blur(10px);
     border: 1px solid var(--glass-border);
-    border-radius: 15px;
+    border-radius: 18px;
     transition: var(--transition-medium);
 }
 
 .contact-item:hover {
-    background: rgba(255, 255, 255, 0.15);
-    transform: translateX(10px);
+    background: rgba(255, 250, 245, 0.16);
+    transform: translateY(-4px);
 }
 
 .contact-icon {
@@ -1297,7 +1379,7 @@ button {
     background: var(--glass-bg);
     backdrop-filter: blur(10px);
     border: 1px solid var(--glass-border);
-    border-radius: 50px;
+    border-radius: 16px;
     text-decoration: none;
     color: var(--text-light);
     font-weight: 500;
@@ -1307,7 +1389,7 @@ button {
 .social-link:hover {
     background: var(--primary-color);
     color: var(--text-dark);
-    transform: translateX(10px);
+    transform: translateY(-3px);
 }
 
 .social-link.instagram:hover {
@@ -1349,6 +1431,10 @@ button {
     }
 }
 
+.reveal-pending {
+    opacity: 0;
+}
+
 /* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
     :root {
@@ -1359,23 +1445,59 @@ button {
 
     .nav-menu {
         position: fixed;
-        left: -100%;
-        top: calc(90px + max(var(--spacing-sm), env(safe-area-inset-top)) + var(--spacing-sm));
+        left: 0;
+        top: calc(82px + max(0.5rem, env(safe-area-inset-top)) + 0.5rem + 1px);
         flex-direction: column;
         background: rgba(68, 43, 54, 0.98);
         width: 100%;
         text-align: center;
-        transition: var(--transition-medium);
+        border-bottom: 1px solid rgba(212, 175, 98, 0.3);
+        box-shadow: 0 16px 30px rgba(44, 24, 34, 0.2);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: translateY(-10px);
+        transition: opacity var(--transition-medium), transform var(--transition-medium);
         padding: var(--spacing-md) 0;
     }
 
     .nav-menu.active {
-        left: 0;
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateY(0);
+    }
+
+    .nav-menu li {
+        opacity: 0;
+        transform: translateY(8px);
+        transition: opacity 240ms ease, transform 240ms ease;
+    }
+
+    .nav-menu.active li {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .nav-menu.active li:nth-child(2) {
+        transition-delay: 50ms;
+    }
+
+    .nav-menu.active li:nth-child(3) {
+        transition-delay: 100ms;
+    }
+
+    .nav-menu.active li:nth-child(4) {
+        transition-delay: 150ms;
+    }
+
+    .nav-menu.active li:nth-child(5) {
+        transition-delay: 200ms;
     }
 
     .nav-brand img {
-        width: 96px;
-        height: 90px;
+        width: 88px;
+        height: 82px;
     }
 
     .hamburger {
@@ -1384,13 +1506,13 @@ button {
 
     /* Typography Reductions */
     .hero-title {
-        font-size: 2.5rem;
-        /* Reduced */
+        font-size: clamp(2.4rem, 9vw, 3.4rem);
     }
 
     .hero-subtitle {
         font-size: 1rem;
         margin-bottom: var(--spacing-md);
+        letter-spacing: 0.06em;
     }
 
     .section-header h2 {
@@ -1479,7 +1601,8 @@ button {
 }
 
 .modal-content {
-    background-color: white;
+    background-color: var(--bg-light);
+    border: 1px solid rgba(217, 137, 160, 0.28);
     padding: var(--spacing-lg);
     border-radius: 20px;
     width: 90%;
@@ -1567,7 +1690,7 @@ button {
 .form-group input,
 .form-group select {
     padding: 0.8rem;
-    border: 1px solid #ddd;
+    border: 1px solid #ead8dd;
     border-radius: 8px;
     font-family: var(--font-body);
     font-size: 1rem;
@@ -1578,11 +1701,20 @@ button {
 .form-group select:focus {
     outline: none;
     border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(212, 175, 98, 0.2);
+}
+
+.form-group input:focus-visible,
+.form-group select:focus-visible,
+.submit-btn:focus-visible,
+.close-modal:focus-visible {
+    outline: 2px solid var(--primary-dark);
+    outline-offset: 3px;
 }
 
 .submit-btn {
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-    color: white;
+    color: var(--text-dark);
     border: none;
     padding: 1rem;
     border-radius: 50px;
@@ -1595,17 +1727,17 @@ button {
 
 .submit-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+    box-shadow: 0 8px 20px rgba(212, 175, 98, 0.3);
 }/* ===== CUSTOM SEARCH BAR - LUXURY GOLD ===== */
 .custom-search-wrap {
-  background: #1a1714;
-  border: 1px solid #78350f;
+  background: #442b36;
+  border: 1px solid #ad8540;
   transition: all 0.3s ease-in-out;
 }
 
 .custom-search-wrap:focus-within {
-  border-color: #f59e0b;
-  box-shadow: 0 0 10px rgba(245, 158, 11, 0.35);
+  border-color: #d4af62;
+  box-shadow: 0 0 10px rgba(212, 175, 98, 0.35);
   transform: translateY(-1px);
 }.search-input-wrapper {
       position: relative;
@@ -1619,10 +1751,26 @@ button {
       padding: 1.1rem 3rem 1.1rem 3.2rem; /* Increased padding for a taller, bulkier look */
       font-size: 1.2rem; /* Increased text size from 1rem */
       font-weight: bold;
-      border: 2px solid #007acc;
+      border: 2px solid #d989a0;
       border-radius: 35px; /* Slightly more rounded to match the larger size */
       outline: none;
       background: #ffffff;
-      box-shadow: 0 4px 12px rgba(0, 122, 204, 0.12);
+      box-shadow: 0 4px 12px rgba(86, 53, 65, 0.12);
       transition: all 0.2s ease;
     }
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-delay: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+    }
+}

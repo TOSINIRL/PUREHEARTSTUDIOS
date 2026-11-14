@@ -1,10 +1,13 @@
 // ===== MOBILE MENU TOGGLE =====
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
+const navbar = document.querySelector('.navbar');
 
 hamburger.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
-    hamburger.classList.toggle('active');
+    const isExpanded = hamburger.getAttribute('aria-expanded') === 'true';
+    hamburger.setAttribute('aria-expanded', String(!isExpanded));
+    hamburger.classList.toggle('active', !isExpanded);
+    navMenu.classList.toggle('active', !isExpanded);
 });
 
 // Close menu when clicking on a nav link
@@ -12,87 +15,76 @@ document.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', () => {
         navMenu.classList.remove('active');
         hamburger.classList.remove('active');
+        hamburger.setAttribute('aria-expanded', 'false');
     });
 });
 
 // ===== SMOOTH SCROLLING =====
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
         if (target) {
-            const offsetTop = target.offsetTop - 70; // Account for fixed navbar
+            const offsetTop = target.getBoundingClientRect().top + window.scrollY - navbar.offsetHeight - 16;
             window.scrollTo({
                 top: offsetTop,
-                behavior: 'smooth'
+                behavior: prefersReducedMotion ? 'auto' : 'smooth'
             });
         }
     });
 });
 
 // ===== NAVBAR SCROLL EFFECT =====
-let lastScroll = 0;
-const navbar = document.querySelector('.navbar');
-
-window.addEventListener('scroll', () => {
-    const currentScroll = window.pageYOffset;
-
-    if (currentScroll <= 0) {
-        navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.3)';
-    } else {
-        navbar.style.boxShadow = '0 2px 30px rgba(0, 0, 0, 0.5)';
-    }
-
-    lastScroll = currentScroll;
-});
-
-// ===== SERVICE CARD ANIMATIONS =====
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
+const updateNavbar = () => {
+    navbar.classList.toggle('is-scrolled', window.scrollY > 16);
 };
 
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-        }
+window.addEventListener('scroll', updateNavbar, { passive: true });
+updateNavbar();
+
+// ===== SCROLL REVEAL ANIMATIONS =====
+const revealTargets = document.querySelectorAll(
+    '.section-header, .service-card, .stylist-wrapper > *, .pricing-card, .calendar-container, .confirmation-content, .contact-item, .social-media'
+);
+
+if (!prefersReducedMotion && 'IntersectionObserver' in window) {
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+
+            const target = entry.target;
+            const delay = Number(target.dataset.revealDelay);
+            target.classList.remove('reveal-pending');
+            if (typeof target.animate !== 'function') {
+                observer.unobserve(target);
+                return;
+            }
+
+            const animation = target.animate(
+                [
+                    { opacity: 0, transform: 'translateY(22px)' },
+                    { opacity: 1, transform: 'translateY(0)' }
+                ],
+                {
+                    duration: 650,
+                    delay,
+                    easing: 'cubic-bezier(0.2, 0.7, 0.3, 1)',
+                    fill: 'backwards'
+                }
+            );
+            animation.onfinish = () => animation.cancel();
+            observer.unobserve(target);
+        });
+    }, { threshold: 0.12, rootMargin: '0px 0px -24px 0px' });
+
+    revealTargets.forEach((target, index) => {
+        target.classList.add('reveal-pending');
+        target.dataset.revealDelay = `${(index % 3) * 80}`;
+        revealObserver.observe(target);
     });
-}, observerOptions);
-
-// Observe all service cards
-document.querySelectorAll('.service-card').forEach(card => {
-    card.style.opacity = '0';
-    card.style.transform = 'translateY(30px)';
-    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-    observer.observe(card);
-});
-
-// ===== CONTACT ITEMS ANIMATION =====
-document.querySelectorAll('.contact-item').forEach((item, index) => {
-    item.style.opacity = '0';
-    item.style.transform = 'translateX(-30px)';
-    item.style.transition = `opacity 0.5s ease ${index * 0.1}s, transform 0.5s ease ${index * 0.1}s`;
-    observer.observe(item);
-});
-
-// ===== SOCIAL LINKS ANIMATION =====
-document.querySelectorAll('.social-link').forEach((link, index) => {
-    link.style.opacity = '0';
-    link.style.transform = 'translateX(-30px)';
-    link.style.transition = `opacity 0.5s ease ${index * 0.15}s, transform 0.5s ease ${index * 0.15}s`;
-    observer.observe(link);
-});
-
-// ===== PARALLAX EFFECT FOR HERO =====
-window.addEventListener('scroll', () => {
-    const scrolled = window.pageYOffset;
-    const hero = document.querySelector('.hero');
-    if (hero) {
-        hero.style.transform = `translateY(${scrolled * 0.5}px)`;
-    }
-});
+}
 
 // ===== BOOKING MODAL LOGIC =====
 const modal = document.getElementById('bookingModal');
@@ -110,10 +102,10 @@ document.querySelectorAll('.select-service-btn').forEach(btn => {
 
         // Scroll to booking section
         const bookingSection = document.getElementById('booking');
-        const offsetTop = bookingSection.offsetTop - 70;
+        const offsetTop = bookingSection.getBoundingClientRect().top + window.scrollY - navbar.offsetHeight - 16;
         window.scrollTo({
             top: offsetTop,
-            behavior: 'smooth'
+            behavior: prefersReducedMotion ? 'auto' : 'smooth'
         });
     });
 });
