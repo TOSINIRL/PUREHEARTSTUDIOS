@@ -26,6 +26,14 @@ async function expectBookingDate(page, day) {
   await expectNoOverflow(page);
 }
 
+async function openUpcomingDecember(page) {
+  const currentMonth = await page.evaluate(() => new Date().getMonth());
+  const monthsUntilDecember = (11 - currentMonth + 12) % 12;
+  for (let month = 0; month < monthsUntilDecember; month += 1) {
+    await page.getByRole('button', { name: 'Next month' }).click();
+  }
+}
+
 test.describe('Responsive layout', () => {
   for (const width of [320, 375, 390, 480, 768, 769, 1024, 1440]) {
     test(`no horizontal overflow at ${width}px`, async ({ page }, testInfo) => {
@@ -41,6 +49,30 @@ test.describe('Responsive layout', () => {
       await expectBookingDate(page, availableDay(page));
     });
   }
+});
+
+test('calendar starts on the current month and navigates forward and back', async ({ page }) => {
+  await page.goto('/');
+  const currentMonthLabel = await page.evaluate(() => new Date().toLocaleDateString('en-US', {
+    month: 'long', year: 'numeric',
+  }));
+  const followingMonthLabel = await page.evaluate(() => {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth() + 1, 1).toLocaleDateString('en-US', {
+      month: 'long', year: 'numeric',
+    });
+  });
+  const monthHeading = page.locator('.calendar-month');
+  const previousMonth = page.getByRole('button', { name: 'Previous month' });
+  const nextMonth = page.getByRole('button', { name: 'Next month' });
+
+  await expect(monthHeading).toHaveText(currentMonthLabel);
+  await expect(previousMonth).toBeDisabled();
+  await nextMonth.click();
+  await expect(monthHeading).toHaveText(followingMonthLabel);
+  await expect(previousMonth).toBeEnabled();
+  await previousMonth.click();
+  await expect(monthHeading).toHaveText(currentMonthLabel);
 });
 
 test('mobile menu opens, toggles closed, and closes after navigation', async ({ page }, testInfo) => {
@@ -84,6 +116,7 @@ test('every service preselects the matching booking option', async ({ page }) =>
 
 test('calendar dates open the correct dialog; close and backdrop restore the page', async ({ page }) => {
   await page.goto('/');
+  await openUpcomingDecember(page);
   await expect(page.locator('#bookingModal')).toBeHidden();
   await expect(page.locator('#bookingModal')).toHaveAttribute('aria-hidden', 'true');
   await page.locator('.calendar-day.unavailable').first().click();

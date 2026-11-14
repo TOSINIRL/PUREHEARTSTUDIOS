@@ -2283,6 +2283,14 @@ body {
     color: #8e5f43;
 }
 
+.calendar-nav:disabled,
+.calendar-nav:disabled:hover {
+    background: none;
+    color: var(--secondary-color);
+    cursor: not-allowed;
+    opacity: 0.4;
+}
+
 .calendar-day-name {
     color: #9c8990;
     font-size: 0.72rem;

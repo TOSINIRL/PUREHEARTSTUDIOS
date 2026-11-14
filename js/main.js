@@ -122,7 +122,13 @@ const modal = document.getElementById('bookingModal');
 const closeModal = document.querySelector('.close-modal');
 const bookingForm = document.getElementById('bookingForm');
 const selectedDateDisplay = document.getElementById('selectedDateDisplay');
-const availableDays = document.querySelectorAll('.calendar-day.available');
+const calendarGrid = document.querySelector('.calendar-grid');
+const calendarMonthHeading = document.querySelector('.calendar-month');
+const previousMonthButton = document.querySelector('.calendar-nav.prev');
+const nextMonthButton = document.querySelector('.calendar-nav.next');
+let visibleMonth = new Date();
+visibleMonth = new Date(visibleMonth.getFullYear(), visibleMonth.getMonth(), 1);
+let selectedCalendarDate = '';
 let preSelectedService = '';
 const dialog = modal.querySelector('[role="dialog"]');
 let triggeringDay = null;
@@ -194,54 +200,125 @@ document.querySelectorAll('.select-service-btn').forEach(btn => {
     });
 });
 
-// Open modal when clicking available date
-availableDays.forEach(day => {
-    const dateObj = new Date(day.dataset.date + 'T12:00:00');
-    day.tabIndex = 0;
-    day.setAttribute('role', 'button');
-    day.setAttribute('aria-haspopup', 'dialog');
-    day.setAttribute('aria-controls', 'bookingModal');
-    day.setAttribute('aria-label', `Book ${dateObj.toLocaleDateString('en-US', {
-        year: 'numeric', month: 'long', day: 'numeric'
-    })}`);
-    day.addEventListener('keydown', event => {
-        if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            day.click();
-        }
-    });
-    day.addEventListener('click', () => {
-        if (modal.classList.contains('active')) return;
-        clearTimeout(hideModalTimer);
-        triggeringDay = day;
-        const date = day.getAttribute('data-date');
-        // Format date for display (e.g., "December 3, 2025")
-        const dateObj = new Date(date + 'T12:00:00'); // Add time to prevent timezone issues
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        selectedDateDisplay.textContent = dateObj.toLocaleDateString('en-US', options);
-
-        // Add active class to show modal
-        modal.classList.add('active');
-        modal.style.display = 'flex'; // Ensure display is flex before opacity transition
-        modal.inert = false;
-        modal.removeAttribute('aria-hidden');
-        previousBodyOverflow = document.body.style.overflow;
-        document.body.style.overflow = 'hidden';
-        backgroundElements = Array.from(document.body.children)
-            .filter(element => element !== modal && !['SCRIPT', 'STYLE'].includes(element.tagName))
-            .map(element => [element, element.inert]);
-        backgroundElements.forEach(([element]) => { element.inert = true; });
-        closeModal.focus({ preventScroll: true });
-
-        // Pre-select service if one was chosen
-        if (preSelectedService) {
-            const serviceSelect = document.getElementById('service');
-            serviceSelect.value = preSelectedService;
-            // Reset after selection so it doesn't persist if they close and pick another date without clicking select again
-            // preSelectedService = ''; // Optional: decide if you want it to persist or not. Let's keep it for now.
-        }
-    });
+const formatCalendarDate = date => date.toLocaleDateString('en-US', {
+    year: 'numeric', month: 'long', day: 'numeric'
 });
+
+const getCalendarDateKey = date => [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, '0'),
+    String(date.getDate()).padStart(2, '0')
+].join('-');
+
+const openBookingForDay = day => {
+    if (modal.classList.contains('active')) return;
+    clearTimeout(hideModalTimer);
+    triggeringDay = day;
+    selectedCalendarDate = day.dataset.date;
+    calendarGrid.querySelectorAll('.calendar-day.selected')
+        .forEach(selectedDay => selectedDay.classList.remove('selected'));
+    day.classList.add('selected');
+    selectedDateDisplay.textContent = formatCalendarDate(new Date(`${day.dataset.date}T12:00:00`));
+
+    modal.classList.add('active');
+    modal.style.display = 'flex';
+    modal.inert = false;
+    modal.removeAttribute('aria-hidden');
+    previousBodyOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    backgroundElements = Array.from(document.body.children)
+        .filter(element => element !== modal && !['SCRIPT', 'STYLE'].includes(element.tagName))
+        .map(element => [element, element.inert]);
+    backgroundElements.forEach(([element]) => { element.inert = true; });
+    closeModal.focus({ preventScroll: true });
+
+    if (preSelectedService) {
+        document.getElementById('service').value = preSelectedService;
+    }
+};
+
+function renderCalendar() {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const year = visibleMonth.getFullYear();
+    const month = visibleMonth.getMonth();
+    const weekdayHeadings = Array.from(calendarGrid.querySelectorAll('.calendar-day-name'));
+    const dateCells = [];
+    const leadingDays = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    calendarMonthHeading.textContent = visibleMonth.toLocaleDateString('en-US', {
+        month: 'long', year: 'numeric'
+    });
+    previousMonthButton.disabled = visibleMonth.getTime() <= currentMonth.getTime();
+
+    for (let index = 0; index < leadingDays; index += 1) {
+        const emptyCell = document.createElement('div');
+        emptyCell.className = 'calendar-day empty';
+        emptyCell.setAttribute('aria-hidden', 'true');
+        dateCells.push(emptyCell);
+    }
+
+    for (let dayNumber = 1; dayNumber <= daysInMonth; dayNumber += 1) {
+        const date = new Date(year, month, dayNumber);
+        const dateKey = getCalendarDateKey(date);
+        const isToday = date.getTime() === today.getTime();
+        const isHoliday = month === 11 && [24, 25, 26].includes(dayNumber);
+        const isAvailable = date >= today && !isHoliday;
+        const dayCell = document.createElement('div');
+
+        dayCell.className = `calendar-day ${isAvailable ? 'available' : 'unavailable'}`;
+        if (isToday) dayCell.classList.add('current');
+        if (dateKey === selectedCalendarDate) dayCell.classList.add('selected');
+        dayCell.dataset.date = dateKey;
+        dayCell.textContent = String(dayNumber);
+        dayCell.setAttribute('role', 'button');
+        dayCell.setAttribute('aria-label', isAvailable
+            ? `Book ${formatCalendarDate(date)}`
+            : `${formatCalendarDate(date)} unavailable`);
+        dayCell.setAttribute('aria-disabled', String(!isAvailable));
+
+        if (isToday) dayCell.setAttribute('aria-current', 'date');
+        if (isAvailable) {
+            dayCell.tabIndex = 0;
+            dayCell.setAttribute('aria-haspopup', 'dialog');
+            dayCell.setAttribute('aria-controls', 'bookingModal');
+            dayCell.addEventListener('keydown', event => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    dayCell.click();
+                }
+            });
+            dayCell.addEventListener('click', () => openBookingForDay(dayCell));
+        }
+
+        dateCells.push(dayCell);
+    }
+
+    const trailingDays = (7 - ((leadingDays + daysInMonth) % 7)) % 7;
+    for (let index = 0; index < trailingDays; index += 1) {
+        const emptyCell = document.createElement('div');
+        emptyCell.className = 'calendar-day empty';
+        emptyCell.setAttribute('aria-hidden', 'true');
+        dateCells.push(emptyCell);
+    }
+
+    calendarGrid.replaceChildren(...weekdayHeadings, ...dateCells);
+}
+
+previousMonthButton.addEventListener('click', () => {
+    if (previousMonthButton.disabled) return;
+    visibleMonth = new Date(visibleMonth.getFullYear(), visibleMonth.getMonth() - 1, 1);
+    renderCalendar();
+});
+
+nextMonthButton.addEventListener('click', () => {
+    visibleMonth = new Date(visibleMonth.getFullYear(), visibleMonth.getMonth() + 1, 1);
+    renderCalendar();
+});
+
+renderCalendar();
 
 // Close modal
 closeModal.addEventListener('click', dismissBookingDialog);

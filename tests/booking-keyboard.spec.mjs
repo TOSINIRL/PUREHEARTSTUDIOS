@@ -3,10 +3,32 @@ import { test, expect } from './fixtures.mjs';
 const modal = page => page.locator('#bookingModal');
 const dialog = page => page.getByRole('dialog', { name: 'Complete Your Booking', exact: true });
 const closeButton = page => page.getByRole('button', { name: 'Close booking dialog' });
-const dateButton = (page, iso = '2025-12-03') =>
+const testMonth = new Date();
+testMonth.setDate(1);
+testMonth.setMonth(testMonth.getMonth() + 1);
+const testDate = day => [
+  testMonth.getFullYear(),
+  String(testMonth.getMonth() + 1).padStart(2, '0'),
+  String(day).padStart(2, '0'),
+].join('-');
+const dateLabel = iso => new Date(`${iso}T12:00:00`).toLocaleDateString('en-US', {
+  year: 'numeric', month: 'long', day: 'numeric',
+});
+const dates = {
+  third: testDate(3),
+  fourth: testDate(4),
+  eighth: testDate(8),
+  nineteenth: testDate(19),
+  twentieth: testDate(20),
+};
+const dateButton = (page, iso = dates.third) =>
   page.locator(`.calendar-day.available[data-date="${iso}"]`);
 
-async function openWithKeyboard(page, { key = 'Enter', iso = '2025-12-03' } = {}) {
+async function openTestMonth(page) {
+  await page.getByRole('button', { name: 'Next month' }).click();
+}
+
+async function openWithKeyboard(page, { key = 'Enter', iso = dates.third } = {}) {
   const day = dateButton(page, iso);
   await day.focus();
   await expect(day).toBeFocused();
@@ -28,13 +50,15 @@ async function expectDismissed(page, day, overflow = '') {
 test.describe('Booking keyboard controls', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
+    await openTestMonth(page);
   });
 
-  for (const [key, iso, label] of [
-    ['Enter', '2025-12-03', 'December 3, 2025'],
-    ['Space', '2025-12-31', 'December 31, 2025'],
+  for (const [key, iso] of [
+    ['Enter', dates.third],
+    ['Space', dates.fourth],
   ]) {
     test(`${key} activates a named calendar date and focuses the dialog close button`, async ({ page }) => {
+      const label = dateLabel(iso);
       const day = dateButton(page, iso);
       await expect(day).toHaveRole('button');
       await expect(day).toHaveAccessibleName(`Book ${label}`);
@@ -84,7 +108,7 @@ test.describe('Booking keyboard controls', () => {
   for (const method of ['Escape', 'close button', 'backdrop']) {
     test(`${method} dismisses the dialog and restores the exact triggering date`, async ({ page }) => {
       await page.locator('body').evaluate(body => { body.style.overflow = 'scroll'; });
-      const day = await openWithKeyboard(page, { iso: '2025-12-19' });
+      const day = await openWithKeyboard(page, { iso: dates.nineteenth });
       await expect(page.locator('body')).toHaveCSS('overflow', 'hidden');
       if (method === 'Escape') {
         await page.getByLabel('Full Name', { exact: true }).focus();
@@ -100,7 +124,7 @@ test.describe('Booking keyboard controls', () => {
       await expectDismissed(page, day, 'scroll');
       await expect(page.locator('#booking')).toHaveJSProperty('inert', false);
       await page.keyboard.press('Tab');
-      await expect(dateButton(page, '2025-12-20')).toBeFocused();
+      await expect(dateButton(page, dates.twentieth)).toBeFocused();
     });
   }
 
@@ -134,10 +158,10 @@ test.describe('Booking keyboard controls', () => {
     await page.keyboard.press('Escape');
     await expect(modal(page)).toHaveAttribute('aria-hidden', 'true');
     // Reopen a different date before the 300ms closing timeout can run.
-    const latestDay = await openWithKeyboard(page, { key: 'Space', iso: '2025-12-30' });
+    const latestDay = await openWithKeyboard(page, { key: 'Space', iso: dates.eighth });
     await page.clock.runFor(350);
     await expect(dialog(page)).toBeVisible();
-    await expect(dialog(page)).toHaveAccessibleDescription('Selected Date: December 30, 2025');
+    await expect(dialog(page)).toHaveAccessibleDescription(`Selected Date: ${dateLabel(dates.eighth)}`);
     await expect(closeButton(page)).toBeFocused();
     await expect(page.locator('#booking')).toHaveJSProperty('inert', true);
     await page.keyboard.press('Shift+Tab');
@@ -154,7 +178,8 @@ test.describe('Booking keyboard controls with stubbed delivery', () => {
 
   test('disabled submit is skipped in both directions; success dismisses and restores focus', async ({ page, emailStub }) => {
     await page.goto('/');
-    const day = await openWithKeyboard(page, { iso: '2025-12-08' });
+    await openTestMonth(page);
+    const day = await openWithKeyboard(page, { iso: dates.eighth });
     await page.getByLabel('Email Address', { exact: true }).fill('keyboard-test@example.invalid');
     await page.getByLabel('Preferred Time', { exact: true }).selectOption('10:00 AM');
     await page.getByLabel('Full Name', { exact: true }).fill('Keyboard Test');
@@ -168,7 +193,7 @@ test.describe('Booking keyboard controls with stubbed delivery', () => {
     await expect(submit).toHaveText('Sending...');
     expect(emailStub.calls[0][2]).toMatchObject({
       from_email: 'keyboard-test@example.invalid',
-      date: 'December 8, 2025',
+      date: dateLabel(dates.eighth),
     });
     await service.focus();
     await page.keyboard.press('Tab');
