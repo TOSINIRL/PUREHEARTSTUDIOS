@@ -144,6 +144,7 @@ button {
 .cta-button:focus-visible,
 .select-service-btn:focus-visible,
 .calendar-nav:focus-visible,
+.calendar-day.available:focus-visible,
 .social-link:focus-visible {
     outline: 2px solid var(--primary-color);
     outline-offset: 4px;
@@ -1581,6 +1582,8 @@ button {
 /* ===== BOOKING MODAL ===== */
 .modal {
     display: none;
+    align-items: center;
+    justify-content: center;
     position: fixed;
     z-index: 2000;
     left: 0;
@@ -1636,6 +1639,12 @@ button {
 
 .close-modal {
     position: absolute;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    font-family: inherit;
+    width: 44px;
+    height: 44px;
     top: 15px;
     right: 20px;
     font-size: 28px;
@@ -1772,5 +1781,958 @@ button {
         animation-iteration-count: 1 !important;
         scroll-behavior: auto !important;
         transition-duration: 0.01ms !important;
+    }
+}
+
+/* ========================================================================
+   PUREHEARTEDSTUDIOZ — VISUAL REFRESH
+   Direction: editorial salon atelier; intimate, polished, a little daring.
+   The existing Web Animations scroll-reveal hook and responsive structure
+   remain intact. Motion here is decorative and transform/opacity-led.
+   ======================================================================== */
+
+:root {
+    --primary-color: #d7aa67;
+    --primary-dark: #a9773f;
+    --secondary-color: #482b3a;
+    --accent-color: #d77b83;
+    --bg-dark: #2f1d29;
+    --bg-light: #f7f1e9;
+    --text-dark: #382832;
+    --text-light: #fff9f2;
+    --glass-bg: rgba(255, 249, 242, 0.08);
+    --glass-border: rgba(255, 249, 242, 0.2);
+    --font-heading: 'Playfair Display', Georgia, serif;
+    --font-body: 'Avenir Next', 'Century Gothic', 'Trebuchet MS', sans-serif;
+    --transition-fast: 180ms cubic-bezier(0.22, 1, 0.36, 1);
+    --transition-medium: 360ms cubic-bezier(0.22, 1, 0.36, 1);
+    --transition-slow: 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html {
+    scroll-padding-top: 7rem;
+}
+
+body {
+    background: var(--bg-light);
+    color: var(--text-dark);
+    font-size: 1rem;
+    letter-spacing: 0.005em;
+}
+
+.container {
+    max-width: 1320px;
+}
+
+/* A compact, inky header keeps the original fixed-nav behavior. */
+.navbar {
+    background: rgba(47, 29, 41, 0.94);
+    border-bottom-color: rgba(215, 170, 103, 0.32);
+    box-shadow: 0 10px 34px rgba(35, 20, 29, 0.2);
+    backdrop-filter: blur(16px) saturate(125%);
+}
+
+.navbar.is-scrolled {
+    background: rgba(47, 29, 41, 0.98);
+    box-shadow: 0 12px 36px rgba(35, 20, 29, 0.32);
+}
+
+.nav-brand img {
+    border-radius: 0 0 18px 18px;
+}
+
+.nav-link {
+    font-size: 0.76rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.nav-link::after {
+    height: 1px;
+    bottom: -8px;
+    background: var(--accent-color);
+}
+
+.hamburger span {
+    border-radius: 2px;
+    height: 2px;
+}
+
+/* Hero: the original studio photograph becomes a cinematic, left-led cover. */
+.hero {
+    height: 100vh;
+    min-height: 640px;
+    isolation: isolate;
+    background-color: #392532;
+    background-position: center 18%;
+    background-attachment: scroll;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    width: min(52vw, 720px);
+    aspect-ratio: 1;
+    right: -12%;
+    top: -28%;
+    border: 1px solid rgba(255, 249, 242, 0.18);
+    border-radius: 50%;
+    box-shadow:
+        0 0 0 34px rgba(255, 249, 242, 0.035),
+        0 0 0 86px rgba(255, 249, 242, 0.025);
+    pointer-events: none;
+    animation: ph-orbit-drift 18s ease-in-out infinite alternate;
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    z-index: 3;
+    inset: 1.25rem;
+    border: 1px solid rgba(255, 249, 242, 0.2);
+    pointer-events: none;
+    opacity: 0;
+    animation: ph-frame-arrive 900ms 650ms ease-out forwards;
+}
+
+.hero-overlay {
+    z-index: 1;
+    background:
+        linear-gradient(90deg, rgba(37, 22, 33, 0.88) 0%, rgba(47, 29, 41, 0.66) 42%, rgba(47, 29, 41, 0.1) 100%),
+        linear-gradient(0deg, rgba(33, 20, 29, 0.46), transparent 48%);
+}
+
+.hero-content {
+    z-index: 2;
+    width: min(100% - 2rem, 1320px);
+    margin: 3rem auto 0;
+    padding: 0 2rem;
+    text-align: left;
+}
+
+.hero-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    width: fit-content;
+    color: #f1d8c9;
+    font-size: 0.72rem;
+    letter-spacing: 0.28em;
+    margin-bottom: 1.5rem;
+    animation: ph-hero-enter 850ms 100ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.hero-eyebrow::before {
+    content: '';
+    width: 2.7rem;
+    height: 1px;
+    background: var(--primary-color);
+}
+
+.hero-title {
+    max-width: 850px;
+    color: #f2d4a0;
+    font-size: clamp(3.5rem, 8vw, 7.8rem);
+    line-height: 0.98;
+    letter-spacing: -0.065em;
+    text-shadow: 0 8px 38px rgba(22, 12, 19, 0.34);
+    animation: ph-hero-enter 1s 220ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.hero-subtitle {
+    max-width: 30rem;
+    color: rgba(255, 249, 242, 0.88);
+    font-size: clamp(0.95rem, 1.5vw, 1.16rem);
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    line-height: 1.8;
+    margin: 1.45rem 0 2.4rem;
+    text-transform: uppercase;
+    animation: ph-hero-enter 850ms 360ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.cta-button {
+    border-radius: 3px;
+    padding: 1.08rem 1.65rem;
+    background: var(--primary-color);
+    color: #30202a;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    box-shadow: 0 12px 34px rgba(21, 12, 18, 0.28);
+    animation: ph-hero-enter 850ms 480ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.cta-button::before {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.38), transparent);
+}
+
+.cta-button:hover {
+    transform: translateY(-4px);
+    background: #e2b978;
+    box-shadow: 0 17px 36px rgba(21, 12, 18, 0.34);
+}
+
+/* Section rhythm: warmer paper, crisp type and a quieter, richer shadow. */
+.services,
+.booking-calendar {
+    background: #f7f1e9;
+}
+
+.services,
+.meet-stylist,
+.pricing-section,
+.booking-calendar,
+.appointment-confirmation,
+.contact {
+    padding-top: clamp(4.5rem, 9vw, 8rem);
+    padding-bottom: clamp(4.5rem, 9vw, 8rem);
+}
+
+.section-header {
+    margin-bottom: clamp(2.3rem, 5vw, 4rem);
+}
+
+.section-header h2 {
+    color: var(--secondary-color);
+    font-size: clamp(2.45rem, 5vw, 4.4rem);
+    letter-spacing: -0.055em;
+    line-height: 1.06;
+}
+
+.section-header h2::after {
+    width: 3.5rem;
+    height: 1px;
+    margin-top: 1.35rem;
+    background: var(--accent-color);
+}
+
+.section-header p {
+    color: #786a70;
+    font-size: 1rem;
+    letter-spacing: 0.025em;
+}
+
+.services-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 285px), 1fr));
+    gap: 1.35rem;
+    margin-top: 3rem;
+}
+
+.service-card {
+    background: #fffaf3;
+    border: 1px solid rgba(72, 43, 58, 0.1);
+    border-radius: 4px;
+    box-shadow: 0 12px 34px rgba(72, 43, 58, 0.07);
+    transition:
+        transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1),
+        box-shadow 420ms cubic-bezier(0.2, 0.8, 0.2, 1),
+        border-color 420ms ease;
+}
+
+.service-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(215, 123, 131, 0.5);
+    box-shadow: 0 24px 50px rgba(72, 43, 58, 0.15);
+}
+
+.service-image {
+    height: auto;
+    aspect-ratio: 1.16 / 1;
+    background: #e8ddd4;
+}
+
+.service-image::after {
+    content: '';
+    position: absolute;
+    inset: 55% 0 0;
+    background: linear-gradient(0deg, rgba(38, 24, 33, 0.18), transparent);
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.service-image img {
+    transition: transform 850ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.service-card:hover .service-image img {
+    transform: scale(1.07);
+}
+
+.service-content {
+    padding: 1.45rem 1.5rem 1.55rem;
+}
+
+.service-content h3 {
+    color: var(--secondary-color);
+    font-size: 1.4rem;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.65rem;
+}
+
+.service-content p {
+    color: #74666d;
+    font-size: 0.93rem;
+    line-height: 1.75;
+}
+
+.select-service-btn {
+    border-color: var(--secondary-color);
+    border-radius: 2px;
+    color: var(--secondary-color);
+    font-size: 0.73rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    padding: 0.72rem 1.15rem;
+    text-transform: uppercase;
+    transition: color var(--transition-medium), background var(--transition-medium), transform var(--transition-fast);
+}
+
+.select-service-btn:hover {
+    background: var(--secondary-color);
+    color: var(--text-light);
+    transform: translateY(-2px);
+}
+
+.select-service-btn:active,
+.cta-button:active,
+.submit-btn:active,
+.social-link:active {
+    transform: translateY(1px) scale(0.98);
+}
+
+/* Stylist portrait framed like a print; the biography stays personal and calm. */
+.meet-stylist {
+    background: #eee4dc;
+}
+
+.meet-stylist::before,
+.meet-stylist::after {
+    width: 260px;
+    height: 260px;
+    background: radial-gradient(circle, rgba(215, 123, 131, 0.14) 0%, transparent 72%);
+}
+
+.stylist-wrapper {
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    gap: clamp(2.5rem, 8vw, 7.5rem);
+}
+
+.stylist-image-container {
+    aspect-ratio: 0.86 / 1;
+    border: 9px solid rgba(255, 250, 243, 0.78);
+    border-radius: 2px;
+    box-shadow: 18px 20px 0 rgba(72, 43, 58, 0.1), 0 28px 60px rgba(72, 43, 58, 0.17);
+}
+
+.stylist-main-image {
+    transition: transform 900ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.stylist-image-container:hover .stylist-main-image {
+    transform: scale(1.035);
+}
+
+.stylist-right {
+    padding: 0;
+}
+
+.stylist-heading {
+    margin-bottom: 1.8rem;
+}
+
+.heading-light {
+    color: #a66f72;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+}
+
+.heading-bold {
+    color: var(--secondary-color);
+    font-size: clamp(2.7rem, 5vw, 4.6rem);
+    letter-spacing: -0.055em;
+    line-height: 1.02;
+}
+
+.stylist-bio {
+    color: #5e4b54;
+    font-size: 1.05rem;
+    font-style: normal;
+    line-height: 1.95;
+}
+
+/* Pricing keeps its deep plum identity, with warm paper as the focal point. */
+.pricing-section {
+    background:
+        radial-gradient(ellipse at 80% 4%, rgba(215, 123, 131, 0.15), transparent 35%),
+        linear-gradient(145deg, #482b3a 0%, #2f1d29 100%);
+}
+
+.pricing-section::before {
+    background:
+        radial-gradient(circle at 16% 62%, rgba(215, 170, 103, 0.1) 0%, transparent 42%),
+        radial-gradient(circle at 86% 28%, rgba(215, 123, 131, 0.12) 0%, transparent 44%);
+    animation: ph-pricing-breathe 12s ease-in-out infinite alternate;
+}
+
+.pricing-section .section-header h2,
+.pricing-section .section-header p {
+    color: var(--text-light);
+}
+
+.price-title {
+    color: #e5bd7b !important;
+}
+
+.pricing-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    gap: 1.25rem;
+}
+
+.pricing-card {
+    background: #f8f1e9;
+    border: 1px solid rgba(255, 249, 242, 0.18);
+    border-radius: 3px;
+    box-shadow: 0 18px 42px rgba(20, 11, 17, 0.24);
+    transition: transform 400ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 400ms ease;
+}
+
+.pricing-card::before {
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
+}
+
+.pricing-card:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 26px 56px rgba(20, 11, 17, 0.36);
+}
+
+.pricing-card-header {
+    background: #3b2532;
+    padding: 1.5rem 1.5rem 1.25rem;
+}
+
+.pricing-card-header h3 {
+    color: #e5bd7b;
+    font-size: 1.13rem;
+    letter-spacing: 0.22em;
+}
+
+.pricing-card-body {
+    padding: 1rem 1.5rem 1.3rem;
+}
+
+.price-item {
+    padding: 0.88rem 0;
+    border-bottom-color: rgba(72, 43, 58, 0.12);
+}
+
+.price-item:hover {
+    background: rgba(215, 123, 131, 0.07);
+}
+
+.service-name {
+    color: #513747;
+    font-size: 0.96rem;
+    white-space: normal;
+}
+
+.price-dots {
+    border-bottom-color: rgba(169, 119, 63, 0.45);
+}
+
+.price {
+    color: #956c3e;
+    font-size: 1.15rem;
+}
+
+/* Booking UI: tactile dates, a clear selected state, and unambiguous controls. */
+.booking-calendar {
+    background:
+        radial-gradient(ellipse at 8% 70%, rgba(215, 123, 131, 0.08), transparent 36%),
+        #f1e7de;
+}
+
+.booking-calendar .section-header p {
+    color: #70616a;
+}
+
+.calendar-container {
+    background: #fffaf3;
+    border: 1px solid rgba(72, 43, 58, 0.12);
+    border-radius: 5px;
+    padding: clamp(1.25rem, 4vw, 3rem);
+    box-shadow: 0 24px 60px rgba(72, 43, 58, 0.12);
+}
+
+.calendar-month {
+    color: var(--secondary-color);
+    font-size: clamp(1.2rem, 3vw, 1.6rem);
+}
+
+.calendar-nav {
+    color: var(--secondary-color);
+    border-radius: 2px;
+}
+
+.calendar-nav:hover {
+    background: rgba(215, 170, 103, 0.16);
+    color: #8e5f43;
+}
+
+.calendar-day-name {
+    color: #9c8990;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+}
+
+.calendar-day {
+    border-radius: 50%;
+    transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+}
+
+.calendar-day.available {
+    color: #4c3342;
+}
+
+.calendar-day.available:hover {
+    background: rgba(215, 170, 103, 0.22);
+    transform: scale(1.08);
+}
+
+.calendar-day.current {
+    background: #482b3a;
+    color: #fff9f2;
+}
+
+.calendar-day.selected,
+.calendar-day.selected:hover {
+    background: var(--accent-color);
+    color: #fff9f2;
+}
+
+.calendar-day.unavailable {
+    background: #eee8e2;
+    color: #aa9ea1;
+}
+
+.calendar-legend {
+    border-top-color: rgba(72, 43, 58, 0.12);
+}
+
+.legend-item {
+    color: #71636a;
+}
+
+.available-dot {
+    background: #482b3a;
+}
+
+.selected-dot {
+    background: var(--accent-color);
+}
+
+.booking-note {
+    background: #f1e4d5;
+    border-left-color: var(--primary-dark);
+    border-radius: 2px;
+}
+
+.booking-note p {
+    color: #59444f;
+}
+
+.booking-note strong {
+    color: #8b603a;
+}
+
+/* The confirmation and contact sections close on a warm, confident note. */
+.appointment-confirmation {
+    background:
+        radial-gradient(ellipse at 50% 0%, rgba(215, 170, 103, 0.13), transparent 55%),
+        #f7f1e9;
+}
+
+.appointment-confirmation::before,
+.appointment-confirmation::after {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(169, 119, 63, 0.72), transparent);
+}
+
+.header-line {
+    background: #b78955;
+}
+
+.confirmation-header h2 {
+    color: var(--secondary-color);
+    letter-spacing: 0.17em;
+}
+
+.confirmation-main {
+    color: #513747;
+}
+
+.confirmation-reminder {
+    color: #71616a;
+    font-style: normal;
+}
+
+.icon-circle {
+    border-color: #b78955;
+    background: #fffaf3;
+}
+
+.icon-circle:hover {
+    background: #e7c58e;
+}
+
+.contact {
+    background:
+        radial-gradient(ellipse at 85% 5%, rgba(215, 123, 131, 0.14), transparent 35%),
+        linear-gradient(145deg, #482b3a, #2f1d29);
+}
+
+.contact .section-header h2 {
+    color: #f2d4a0;
+}
+
+.contact .section-header p {
+    color: rgba(255, 249, 242, 0.72);
+}
+
+.contact-item {
+    border-radius: 3px;
+    border-color: rgba(255, 249, 242, 0.16);
+    background: rgba(255, 249, 242, 0.055);
+    transition: transform var(--transition-medium), background var(--transition-medium), border-color var(--transition-medium);
+}
+
+.contact-item:hover {
+    background: rgba(255, 249, 242, 0.11);
+    border-color: rgba(215, 170, 103, 0.48);
+    transform: translateX(5px);
+}
+
+.contact-icon {
+    color: #e2bd82;
+    filter: saturate(0.75);
+}
+
+.contact-details h3,
+.social-media h3 {
+    color: #e2bd82;
+}
+
+.social-link {
+    border-radius: 3px;
+    border-color: rgba(255, 249, 242, 0.17);
+    background: rgba(255, 249, 242, 0.055);
+    letter-spacing: 0.04em;
+}
+
+.social-link:hover {
+    background: var(--primary-color);
+    color: #30202a;
+    transform: translateX(5px);
+}
+
+.social-link.instagram:hover {
+    background: #bd736e;
+    color: #fff9f2;
+}
+
+.social-link.tiktok:hover {
+    background: #251a22;
+    color: #f0c77f;
+}
+
+.footer {
+    background: #241720;
+    color: rgba(255, 249, 242, 0.84);
+}
+
+.footer p:last-child {
+    color: #d2aa70;
+    font-size: 0.75rem;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+}
+
+/* Modal keeps its existing display/active contract used by main.js. */
+.modal {
+    background-color: rgba(34, 20, 29, 0.72);
+    backdrop-filter: blur(9px);
+}
+
+.modal-content {
+    background: #f8f1e9;
+    border: 1px solid rgba(215, 170, 103, 0.5);
+    border-radius: 4px;
+    box-shadow: 0 28px 80px rgba(20, 11, 17, 0.38);
+}
+
+.modal-header h2 {
+    color: var(--secondary-color);
+    font-size: clamp(1.7rem, 4vw, 2.25rem);
+    letter-spacing: -0.04em;
+}
+
+.modal-header p {
+    color: #70616a;
+}
+
+#selectedDateDisplay {
+    color: #966c3e;
+}
+
+.close-modal {
+    color: #896f79;
+    line-height: 1;
+    transition: color var(--transition-fast), transform var(--transition-fast);
+}
+
+.close-modal:hover {
+    color: var(--accent-color);
+    transform: rotate(90deg);
+}
+
+.form-group label {
+    color: #513747;
+    letter-spacing: 0.03em;
+}
+
+.form-group input,
+.form-group select {
+    background: #fffaf3;
+    border: 1px solid #d9c9c0;
+    border-radius: 2px;
+    color: var(--text-dark);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #ad8540;
+    box-shadow: 0 0 0 3px rgba(215, 170, 103, 0.2);
+}
+
+.submit-btn {
+    border-radius: 2px;
+    background: #d7aa67;
+    color: #30202a;
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    box-shadow: 0 8px 20px rgba(72, 43, 58, 0.1);
+}
+
+.submit-btn:hover {
+    background: #e2b978;
+    box-shadow: 0 12px 24px rgba(72, 43, 58, 0.16);
+}
+
+@keyframes ph-hero-enter {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 26px, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes ph-frame-arrive {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes ph-orbit-drift {
+    from {
+        transform: translate3d(0, 0, 0);
+    }
+
+    to {
+        transform: translate3d(-2.5rem, 1.5rem, 0);
+    }
+}
+
+@keyframes ph-pricing-breathe {
+    from {
+        opacity: 0.72;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .nav-menu {
+        background: rgba(47, 29, 41, 0.98);
+        border-bottom-color: rgba(215, 170, 103, 0.32);
+    }
+
+    .hero {
+        min-height: 620px;
+        background-position: 57% top;
+    }
+
+    .hero-overlay {
+        background:
+            linear-gradient(90deg, rgba(37, 22, 33, 0.86), rgba(47, 29, 41, 0.48) 70%, rgba(47, 29, 41, 0.3)),
+            linear-gradient(0deg, rgba(33, 20, 29, 0.44), transparent 58%);
+    }
+
+    .hero-content {
+        padding: 0 0.5rem;
+        margin-top: 4rem;
+    }
+
+    .hero-title {
+        max-width: 680px;
+        font-size: clamp(3.25rem, 12vw, 5.3rem);
+    }
+
+    .hero-subtitle {
+        max-width: 22rem;
+        font-size: 0.8rem;
+        line-height: 1.7;
+    }
+
+    .hero::after {
+        inset: 0.65rem;
+    }
+
+    .stylist-wrapper {
+        grid-template-columns: 1fr;
+        gap: 2.6rem;
+    }
+
+    .stylist-left {
+        width: min(100%, 440px);
+        margin: 0 auto;
+    }
+
+    .stylist-image-container {
+        aspect-ratio: 0.92 / 1;
+    }
+
+    .stylist-right {
+        text-align: center;
+    }
+
+    .stylist-heading {
+        align-items: center;
+    }
+
+    .heading-light {
+        font-size: 0.85rem;
+    }
+
+    .heading-bold {
+        font-size: clamp(2.5rem, 10vw, 3.5rem);
+    }
+
+    .stylist-bio {
+        margin: 0 auto;
+        font-size: 1rem;
+        text-align: center;
+    }
+
+    .service-card {
+        max-width: 440px;
+    }
+
+    .service-image {
+        aspect-ratio: 1.25 / 1;
+    }
+
+    .calendar-container {
+        padding: 1.1rem;
+    }
+
+    .calendar-day {
+        width: auto;
+        height: auto;
+        min-width: 32px;
+        min-height: 34px;
+    }
+
+    .contact-content {
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero {
+        min-height: 580px;
+        background-position: 57% top;
+    }
+
+    .hero-title {
+        font-size: clamp(3rem, 13.5vw, 4rem);
+    }
+
+    .hero-eyebrow {
+        font-size: 0.64rem;
+        letter-spacing: 0.2em;
+    }
+
+    .cta-button {
+        padding: 1rem 1.2rem;
+        font-size: 0.71rem;
+    }
+
+    .services-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .service-image {
+        aspect-ratio: 1.2 / 1;
+    }
+
+    .calendar-grid {
+        gap: 0.2rem;
+    }
+
+    .calendar-day-name {
+        padding: 0.35rem 0;
+    }
+
+    .calendar-day {
+        min-width: 28px;
+        min-height: 31px;
+    }
+
+    .confirmation-header h2 {
+        font-size: 1rem;
+        letter-spacing: 0.12em;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero::before,
+    .hero::after,
+    .pricing-section::before {
+        animation: none !important;
+    }
+
+    .hero-eyebrow,
+    .hero-title,
+    .hero-subtitle,
+    .cta-button {
+        animation: none !important;
+        opacity: 1;
+        transform: none;
     }
 }

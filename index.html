@@ -13,6 +13,8 @@
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/motion.css">
+    <link rel="stylesheet" href="css/service-picker.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
         (function () {
@@ -24,12 +26,14 @@
 </head>
 
 <body>
+    <div class="reading-progress" aria-hidden="true"></div>
     <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
             <div class="nav-brand">
                 <a href="#home" aria-label="Pure Hearted Studio home">
                     <img src="assets/images/pure-hearted-studio-logo.jpeg" alt="Pure Hearted Studio">
+                    <span class="brand-wordmark" aria-hidden="true">Pure Hearted<span>STUDIOZ</span></span>
                 </a>
             </div>
 
@@ -51,14 +55,32 @@
 
     <!-- Hero Section -->
     <section id="home" class="hero">
+        <div class="hero-photo" aria-hidden="true"></div>
         <div class="hero-overlay"></div>
         <div class="hero-content">
             <p class="hero-eyebrow">Pure Hearted Studioz</p>
-            <h2 class="hero-title">Where Beauty Meets Artistry</h2>
+            <h1 class="hero-title">
+                <span class="hero-line"><span>Where Beauty</span></span>
+                <span class="hero-line"><span>Meets <em>Artistry</em></span></span>
+            </h1>
             <p class="hero-subtitle">Premium Natural Hair Care & Styling</p>
-            <a href="#booking" class="cta-button">Book Your Appointment</a>
+            <a href="#booking" class="cta-button">Book Your Appointment <span class="button-arrow" aria-hidden="true">↗</span></a>
+        </div>
+        <div class="hero-footer">
+            <p>TORONTO, ONTARIO<span>Natural hair. Personal artistry.</span></p>
+            <a href="#services" class="discover-link">Explore the studio <span aria-hidden="true">↓</span></a>
         </div>
     </section>
+
+    <div class="style-strip">
+        <div class="style-strip-window">
+            <div class="style-strip-track">
+                <span class="style-strip-group">Locs <i aria-hidden="true">✦</i> Braids <i aria-hidden="true">✦</i> Twists <i aria-hidden="true">✦</i> Your crown, your way <i aria-hidden="true">✦</i></span>
+                <span class="style-strip-group" aria-hidden="true">Locs <i>✦</i> Braids <i>✦</i> Twists <i>✦</i> Your crown, your way <i>✦</i></span>
+            </div>
+        </div>
+        <button class="strip-toggle" type="button" aria-label="Pause moving service strip" aria-pressed="false"><span aria-hidden="true">Ⅱ</span></button>
+    </div>
 
     <!-- Services Section -->
     <section id="services" class="services">
@@ -501,12 +523,12 @@
     </footer>
 
     <!-- Booking Modal -->
-    <div id="bookingModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
+    <div id="bookingModal" class="modal" aria-hidden="true" inert>
+        <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="bookingTitle" aria-describedby="bookingDate" tabindex="-1">
+            <button type="button" class="close-modal" aria-label="Close booking dialog">&times;</button>
             <div class="modal-header">
-                <h2>Complete Your Booking</h2>
-                <p>Selected Date: <span id="selectedDateDisplay"></span></p>
+                <h2 id="bookingTitle">Complete Your Booking</h2>
+                <p id="bookingDate">Selected Date: <span id="selectedDateDisplay"></span></p>
             </div>
             <form id="bookingForm" class="booking-form">
                 <div class="form-group">
@@ -557,6 +579,8 @@
     </div>
 
     <script src="js/main.js"></script>
+    <script src="js/motion.js"></script>
+    <script src="js/service-picker.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,19 @@
+{
+  "name": "pureheartedstudio",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build:site": "node scripts/build-site.mjs",
+    "test": "npm run test:smoke",
+    "test:smoke": "playwright test",
+    "test:booking": "playwright test tests/booking-keyboard.spec.mjs",
+    "test:smoke:report": "playwright show-report generated-artifacts/playwright-report"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@playwright/test": "^1.65.1"
+  }
+}
